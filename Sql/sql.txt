@@ -1,0 +1,222 @@
+75
+114-119 Videos remaining to Watch
+**Arithmatic Operatores:
+**Add,Subsatrct,Multiplication & Division:
+select salary,salary+5000 as 'New Salary' from employee;
+*************************************************************************************************************************
+1.where clause
+select * from employee where salary=50000;
+
+2.select command
+select * from employee;
+select empid from employee;
+
+3.select distinct command
+Select distinct salary from employee;
+
+4.insert into
+insert into employee( empid, Firstname) values(1853,'Sahil');
+
+insert into employee( empid, Firstname) values(1853,'Sahil'),(1854,'Mayuri');
+
+**Insert Into without Specifying Column Names
+insert into sexygirls values(null,'Ava','Addams');
+
+5.Is Null:
+Select * from employee where salary IS NULL;
+
+6.Is NOT Null:
+Select * from employee where salary IS NOT NULL;
+
+
+7.Not Equal to Operator
+Select * from employee where Lastname !='Jaiswal';
+
+8.Update :
+
+update employee set Firstname='Surya' , Lastname='Yadav' ,Salary=50000 where empid=1856;
+
+9.Delete 
+delete from employee where empid=1855;
+delete * from employee;
+
+10.Drop table:
+
+drop table sahiltwo;
+
+11.ORDER BY:
+
+select empid from employee order by Firstname;
+select empid from employee order by Firstname DESC;
+select empid from employee order by Firstname AESC;
+
+12.Alter Table:
+
+Alter table is used to add/modify/drop column from table
+
+13.Add column:
+
+alter table employee add City varchar(255);
+
+14.Add Multiple column at 1 time:
+
+alter table employee add Citys varchar(255),
+    -> add cityy varchar(255);
+
+15.Add column at particular index:
+
+ alter table employee add Middlename varchar(255) after Firstname;
+ alter table employee add Middlename varchar(255) first;
+ alter table employee add Middlename varchar(255) last;<- This is by default
+
+ alter table employee add Middlename varchar(255)  not null after Firstname;
+
+16.Primary Key:
+
+It uniquly identifies each row in table
+Every table should have atleast 1 primary key
+It cannot be null.
+records for duplicate primary key entry will not get entered
+records for null primary key entry will not get entered
+
+
+create table sahiltwo(
+    -> empid integer,
+    -> name varchar(255),
+    -> primary key(empid));
+
+***For existing table:
+ alter table employee add primary key(Firstname);
+
+
+17.ANd & Or Operataor:
+ 
+select * from employee where salary=50000 and Lastname='Yadav';
+select * from employee where salary=50000 or  Lastname='Yadav';
+
+18.Auto_Increment:
+
+Auto increment is applied only for Primary Key;
+It will repalce the new value with existing value if we enter duplicte value of auto increment.
+It will add new entry for null value.
+eg:
+Create table sexygirls(
+    -> num int(5) auto_increment,
+    -> firstname varchar(255),
+    -> primary key(num));
+
+19. Basic Sql:
+
+select min(Salary) from employee;
+select max(Salary) from employee;
+select sum(empid) from employee;
+select avg(salary) from employee;
+
+Count does not count Null Values in column
+select count(salary) from employee;
+select count(distinct Lastname) from employee;
+
+***************************************************************************************************************************************************************
+1.Update One Column Multiple Value(When Clause)
+
+	syntax:
+	update employee set City=
+  	  -> case
+   	  -> when salary>=45000 then 'First Slab'
+  	  -> else 'Second Slab'
+   	  -> end;
+
+
+2.Foreign key:
+
+1st create table with primary key
+
+Syntax:
+
+ create table departmenttwo(
+    -> Did integer,
+    -> Dname varchar(255),
+    -> empidd integer,
+    -> primary key(Did),
+    -> foreign key (empidd) references employeetwo(empidd)
+    -> );
+
+3Get Constarints name
+select * from information_schema.table_constraints
+    -> where table_name='dtwo';
+
+4.Drop Foreign Key:
+ alter table Dtwo(tableName) drop foreign key dtwo_ibfk_1<------------Constraints name
+
+5.Add foreign Key for Aleready Data Filled Existing Table:
+alter table dtwo
+-> ADD CONSTRAINT constraint_nam
+-> FOREIGN KEY(EmpId)
+-> REFERENCES employee(EmpId);
+
+6.On delete Cascade:
+"On delete cascade" is a feature in relational database management systems that automatically deletes rows in a child table 
+when corresponding rows are deleted from a parent table.
+
+CREATE INDEX index_name ON employee(column_name);
+
+*Syntax:
+create table department(
+    -> id integer primary key,
+    ->  dname varchar(255),
+    -> EmpId integer,
+    -> foreign key(EmpId) references employee(EmpId) on delete cascade
+    -> );
+
+7.Like:
+
+The LIKE operator is used in a WHERE clause to search for a specified pattern in a column
+Select * from employee where Firstname LIKE 'a%'
+
+WHERE CustomerName LIKE 'a%'	Finds any values that start with "a"
+WHERE CustomerName LIKE '%a'	Finds any values that end with "a"
+WHERE CustomerName LIKE '%or%'	Finds any values that have "or" in any position
+WHERE CustomerName LIKE '_r%'	Finds any values that have "r" in the second position
+WHERE CustomerName LIKE 'a_%'	Finds any values that start with "a" and are at least 2 characters in length
+WHERE CustomerName LIKE 'a__%'	Finds any values that start with "a" and are at least 3 characters in length
+WHERE ContactName LIKE 'a%o'	Finds any values that start with "a" and ends with "o"
+
+
+**Auto-Increment to start from particular number:
+
+alter table employee auto_increment=20;
+
+
+25.Alises:
+
+Alises are used to temporarily rename a table name or column name
+
+Syntax:
+ select firstname as Fuckgirls from sexygirls;
+
+
+27.RelationShip:
+
+A.OneToOne
+B.OneToMany
+C.ManyToMany
+
+
+28.Copy old table in new Table in Same Databses:
+
+create table employee2 like employee;
+insert into employee2 select * from employee;
+
+
+29.Copy old table in new Table in Different Databses:
+
+create table sexygirls2 like sahil.sexygirls;(<-  db.tablename)
+insert into sexygirls2 select * from sahil.sexygirls;
+
+30.Min & Max From Column:
+
+
+select salary,sqrt(salary) from employee;
+select round(salary ,1) from employee; // Here 1 is digit user require after decimal
+
+

@@ -1,0 +1,480 @@
+1.What is  Selenium WebDriver architecture?
+->
+
+-After you trigger the test, complete selenium code(client) which we have written will be converted to JSON format
+-Generated JSON is sent to Browser Driver(Server) through http Protocol.[Note: each browser contains a separate browser driver.]
+-Browser driver communicate with its respective browser and executes the commands by interpreting JSON which it received on the browser.
+-Browser Driver receives response back from the browser and it sends JSON response back to client
+
+2.What are the different types of waits available in Selenium?
+->
+
+**Implicit Waits:
+-Implicit waits are set globally for the entire duration of the WebDriver session. 
+-Once set, the WebDriver will wait for a certain amount of time for an element to appear before throwing a NoSuchElementException. 
+-Implicit waits apply to all findElement and findElements methods.
+-Syntax: driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+**Explicit Waits:
+-Explicit waits are used for specific conditions or elements to appear on the web page.
+-Explicit waits can be used to wait for various conditions, such as element visibility, element clickability, element text, etc.
+-Syntax: WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Wait up to 10 seconds
+
+	 WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("elementId")));
+
+**Fluent Wait:
+-It is a type of explicit wait in Selenium WebDriver that allows you to define custom polling intervals and exceptions to wait for a certain condition to be satisfied
+
+3.How do you handle multiple windows or tabs in Selenium?
+->
+
+-Get the handles of all open windows or tabs by using driver.getWindowHandles() & we will save this to Set of Strings
+For Eg:-     Set<String> window= driver.getWindowHandles();
+
+-Then there is a, Iterator which is a Java utility that allows you to iterate , through the set of window handles.
+
+-The it.next() method moves the iterator to the next window in the collection and returns that element.
+ 
+-The driver.switchTo().window() method is used to switch the focus of the WebDriver to the specified window or tab. 
+
+
+4.How do you perform mouse and keyboard actions using Selenium WebDriver?
+->
+
+-In Selenium WebDriver, you can perform mouse and keyboard actions using the Actions class from the org.openqa.selenium.interactions package. 
+-The Actions class allows you to simulate various mouse and keyboard interactions, such as clicking, double-clicking, dragging, hovering, typing, and more.
+-For Eg:
+
+		Actions a= new Actions(driver);
+		
+		Thread.sleep(2000);
+		
+		WebElement link= driver.findElement(By.xpath("//a[@id='nav-link-accountList']"));
+		
+		//Move to Element
+		a.moveToElement(link).build().perform();
+		
+		Thread.sleep(2000);
+		
+		//Search box search & type input
+		WebElement search= driver.findElement(By.xpath("//input[@id='twotabsearchtextbox']"));
+		
+		a.moveToElement(search).click().keyDown(Keys.SHIFT).sendKeys("hello").build().perform();
+		
+		System.out.println("01");
+		
+		//Double click the element
+		a.moveToElement(search).doubleClick().build().perform();
+		
+		//contextClick  the element
+		a.moveToElement(search).contextClick().build().perform();
+		
+
+5.How do you handle frames in Selenium?
+->
+
+-Handling frames in Selenium involves switching the WebDriver's focus from the default webpage to a specific iframe (inline frame) on the web page. 
+-If a web page contains one or more iframes, you need to switch to the desired iframe to interact with its elements. 
+-Here's how to handle frames in Java with Selenium WebDriver:
+	By using index   :                              driver.switchTo().frame(0);
+	
+	By using name/id :				driver.switchTo().frame("iframeNameOrId");
+	
+	By using xpath :
+							WebElement iframeElement = driver.findElement(By.id("iframeId"));
+							driver.switchTo().frame(iframeElement);
+-Switch back to the default content (main page).
+
+
+
+6.How do you handle SSL certificate errors in Selenium?
+->
+
+-Handling SSL certificate errors in Selenium involves , WebDriver to bypass SSL certificate checks.
+-Create a ChromeOptions object and add the necessary arguments to bypass SSL certificate checks:
+
+	ChromeOptions options = new ChromeOptions();
+	options.setacceptInsecureCerts(true);
+-Create a WebDriver instance using the ChromeOptions
+	
+	WebDriver driver = new ChromeDriver(options);
+
+
+7.What are the differences between close() and quit() methods in Selenium WebDriver?
+->
+
+-close() is used to close the current browser window or tab that the WebDriver is currently controlling.
+
+-quit() is used to end the WebDriver session and close all the browser windows or tabs that the WebDriver has opened.
+
+
+8.What are the differences between findElement() and findElements() methods in Selenium?
+->
+
+-findElement() is used to locate a single web element on the web page that matches the specified locator.
+-The findElement() method returns a single WebElement object
+
+-findElements() is used to locate multiple web elements on the web page that match the specified locator.
+-The findElements() method returns a list of WebElement objects.
+
+9. How do you handle browser cookies in Selenium WebDriver?
+->
+
+-Handling browser cookies in Selenium WebDriver involves various operations such as adding, deleting, and retrieving cookies.
+-Cookies are small pieces of data that are stored by the browser and are used to persist user information across web sessions.
+-Here's how you can handle browser cookies in Selenium WebDriver.
+-Syntax: driver.manage().deleteAllCookies();
+
+10. Different TestNG Annotations & its Uses:
+->
+A. Part 1
+
+@Test- 	    		-For writing the Method
+@BeforeTest 		-It will execute before execution of all the Method in TestNG xml(Priority=2)
+@AfterTest  		-It will execute after  execution of all the Method in TestNG xml(Priority=2)
+@BeforeSuite		-It will execute before execution of all the @BeforeTest in TestNG xml(Priority=1)
+@AfterSuite 		-It will execute after  execution of all the @AfterTest in TestNG xml(Priority=1)
+@BeforeMethod		-It will excute before every method in the class. Applicable for class only & not for entire package. 
+@AfterMethod 		-It will excute after every method in the class. Applicable for class only & not for entire package.
+include,exclude,regex 	-If user want to run only specific test cases frmentire package then this keywords are used.
+		Syntax:  
+ 			<class name="PractiseTestNG.One"> 
+    				<methods>
+    					<include name="m.*"/>  or <exclude name="m.*"/>
+    				</methods>		
+      			</class>
+B. Part 2
+
+group,run- This keywords are used to run specific test cases from entire package. 
+           By grouping the test cases we can run only specific test cases, which are helpul for tester during regression testing
+
+**In TestNG class:
+
+	@Test(groups= {"smoke"})
+	public void m5()
+	{
+		System.out.println("m5");
+	}
+
+**In TestNG xml:
+
+<test thread-count="5" name="Test">
+    	<groups>
+    		<run>
+    			<include name="smoke"/>
+    		</run>
+    	</groups>
+    
+    	<classes>
+	</classes>
+</test>
+
+C. Part 3
+
+dependOn- The method wriiten inside the bracket will execute first.
+
+**Synatx:
+	@Test(dependsOnMethods = {"m2"})
+	public void greet()
+	{
+		System.out.println("greet");
+	}
+
+enabled=false- It is used to skip the test case from the execution
+
+
+**Synatx:
+	@Test(enabled = false)
+	public void greet()
+	{
+		System.out.println("greet");
+	}
+
+timeouts- If any test case taking time longer than usual to execute, we can provide time to wait before throwing an execution.
+
+**Synatx:
+	@Test(timeOut=4000)
+	public void greet()
+	{
+		System.out.println("greet");
+	}
+parameterization- If we want to pass same value to more than 1 test case, then we can use this annotation.
+
+**Synatx:
+	@Parameters({"URL"})
+	@Test(timeOut=4000)
+	public void show2(String Urlname)
+	{
+		System.out.println(Urlname);
+	}
+
+**TestNg xml:
+
+<suite name="Suite">
+	<parameter name="URL" value="https://www.udemy.com/"/>
+	
+ 	<test thread-count="5" name="Test">   
+    		<classes>
+    		</classes>
+  	</test> 
+</suite> 
+
+D. Part 4
+
+dataprovider: If we want to pass different value to same method then we can use this annotation.
+
+**Synatx:
+	@DataProvider
+	public Object[][] Data()
+	{
+		Object[][] data = new Object[3][2];
+
+		data[0][0] = "fuser";
+		data[0][1] = "fpass";
+
+		// You can continue initializing the rest of the elements in the array
+		data[1][0] = "suser";
+		data[1][1] = "spass";
+
+		data[2][0] = "tuser";
+		data[2][1] = "tpass";
+		
+		return data;
+	}
+
+	@Test(dataProvider = "Data")
+	public  void show(String user, String pass)
+	{
+		System.out.println(user);
+		System.out.println(pass);
+	}
+
+E. Part 5
+
+TestNG Listners:We need to implement ITestListener in one seperate class.(implements ITestListener )
+		This interface has alredy predifned methods such as onStart,onFinish, onTestFailure which will execute accorodily as per condition.
+		To implement this we need to add this class in TestNgxml. naming convention is packgename.classname
+
+
+**Synatx:
+	<suite name="Suite">
+   		<listeners>
+   			 <listener class-name="PractiseTestNG.TestNgListeners(packgename.classname)" />
+		</listeners>
+  		<test thread-count="5" name="Test">     
+    			<classes>
+      				<class name="PractiseTestNG.Four"/> 
+    			</classes>
+  		</test> 
+	</suite>
+
+11.What are the advantages of using TestNG with Selenium?
+->
+
+-TestNG uses annotations (like @Test) to define test methods and setup/teardown methods. This makes the test code more organized and readable.
+-TestNG provides detailed test reports, making it easier to identify test failures and understand the overall test execution status.
+-TestNG allows to configure test execution in various ways, such as setting test pSriorities, grouping ,specifying dependencies of tests & parallel test execution. 
+-TestNG supports parallel execution of tests, which can significantly reduce test execution time.
+
+12.Difference between getWindowHandle & getWindowHandles.
+->
+
+getWindowHandle() 
+
+-returns the window handle of currently focused window/tab.
+-Return type of getWindowHandle() is String 
+
+getWindowHandles() 
+
+-returns all windows handles opened by same driver instance including all parent and child window.
+-return type of getWindowHandles() is Set<String>. The return type is Set as window handle is always unique. 
+
+13.How do you capture screenshots in Selenium WebDriver?
+->
+
+public class screenshot {
+
+	public static void main(String[] args) throws IOException 
+	{
+		
+		System.setProperty("webdriver.chrome.driver", "F:\\Selenium\\Healthbee\\Chromedriver\\chromedriver.exe");
+		WebDriver driver=new ChromeDriver();
+		
+		driver.navigate().to("https://www.amazon.in/");
+		
+		driver.manage().window().maximize();
+		
+		File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        	
+		FileUtils.copyFile(screenshotFile, new File("F:\\SAHIL\\selenium\\ssj.png"));
+        
+        	System.out.println("**");
+
+	}
+
+}
+
+14. How do you perform drag and drop operations in Selenium WebDriver?
+->
+
+public class iframe 
+{
+
+	public static void main(String[] args) 
+	{
+		
+		System.setProperty("webdriver.chrome.driver", "F:\\Selenium\\Healthbee\\Chromedriver\\chromedriver.exe");
+		WebDriver driver=new ChromeDriver();
+		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		
+		driver.navigate().to("https://jqueryui.com/droppable/");
+		
+		driver.manage().window().maximize();
+	   
+		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@class='demo-frame']")));
+		
+		//Actions Class Drag & Drop
+		
+		Actions actions= new Actions(driver);
+		WebElement source =driver.findElement(By.xpath("//div[@id='draggable']"));
+	   
+		source.click();
+	    
+	    	WebElement target =driver.findElement(By.xpath("//div[@id='droppable']"));
+		   
+	    	target.click();
+	    
+	    	actions.dragAndDrop(source, target).build().perform();
+	}
+}
+
+15. How do you handle file uploads in Selenium WebDriver?
+->
+
+We will locate webElement of file upload & by using Send Keys method we will pass the file path in the same.
+
+
+public static void main(String[] args) throws InterruptedException 
+{
+	System.setProperty("webdriver.chrome.driver", "F:\\Selenium\\Healthbee\\Chromedriver\\chromedriver.exe");
+	WebDriver driver=new ChromeDriver();
+		
+	driver.navigate().to("https://www.w3schools.com/howto/howto_html_file_upload_button.asp");
+		
+	Thread.sleep(4000);
+		
+	driver.manage().window().maximize();
+		
+	WebElement fileUploadButton =driver.findElement(By.cssSelector("input[type='file']"));
+	fileUploadButton .sendKeys("F:\\Interviws\\Java\\Java.docx");
+	System.out.println("1");
+}
+
+
+16. What are the limitations of Selenium?
+->
+
+1.OTP & captcha cannot be automated
+2.Limited Support for Desktop Applications
+3.No Built-in Reporting:Requires additional framework for report generation
+4.Cannot automate Mobile based application
+5.Browser Compatibility:Changes in browser versions might affect the stability of test scripts, requiring updates or adjustments.
+
+******************************************************************************************************************
+**print multi-dimensional array -excersie
+pom
+pagefactory concept
+section 18b-
+create class
+copy webelement
+create webdriver instace
+create constructor
+create object of pom class in main class
+imprt driver
+implement @findby
+implement pagefactory
+implement actions method
+implement action methdo i pom, create goto & login method
+in login method pass necessary args & similary modify secttion 18 class
+create new pom class for products
+ceate abstarct class for re-usable code
+extend the abstact class with landing page
+create 1 method in abstarct class
+import webdriver wait in same & pass By findBy args
+import super in landingclass foe webdriver to b apper in abstarct class
+properties class in maven selenium. how do you create gloabl properties file & assign variables globally
+
+**Base Class-
+
+-does not have main method
+-used to declare base methods like url,webdriver setup.
+-We need to install 3 dependancy in pom.xml in order to start the project
+-That are selenium java(4.11.0), webdriver manager & testNg(6.14.3) from maven repository
+-create 1 file by extension of .properties
+-it will contain data in key value pair(for eg: browser=chrome)
+-create a object of properties class in BaseClass
+- create fileInput starm object and pass properties file path in the same
+- create webdriver instance & return driver.
+- create nuw method of launcApplication in that 
+driver=previousMethodName();
+
+
+
+******************************************************************************************************************
+01. What is Selenium and what are its main components?
+02. Difference between Selenium & WebDriver.
+03. Explain the differences between Selenium WebDriver, Selenium Grid, and Selenium IDE.
+04. What are the different locators used in Selenium WebDriver?
+05. How do you handle dynamic elements in Selenium?
+06. How do you handle pop-ups and alerts in Selenium?
+07. Explain the concept of TestNG data providers and their usage in data-driven testing.
+08. What is the Page Object Model (POM) and how does it enhance test maintenance in Selenium?
+09. What is the difference between assert and verify commands in Selenium?
+10. Explain the concept of Selenium WebDriver listeners and their usage.
+11. What are the different types of frameworks you can use with Selenium?
+12. What are the different types of exceptions in Selenium?
+13. How do you handle dynamic web elements that have changing IDs or attributes in Selenium?
+14. How do you generate test reports in Selenium?
+15. How do you handle dynamic waits in Selenium WebDriver?
+16. What are the advantages of using XPath locators in Selenium?
+17. What are the different types of navigation commands available in Selenium WebDriver?
+18. How do you handle JavaScript alerts, prompts, and confirmations in Selenium?
+19. What are the different types of test frameworks supported by Selenium WebDriver?
+20. Explain the concept of Selenium Grid and its purpose.
+21. How do you handle AJAX calls and dynamic web content in Selenium?
+22. How do you handle synchronization issues in Selenium?
+23. How do you handle file uploads and downloads in Selenium WebDriver?
+24. What are the different ways to handle dropdowns in Selenium?
+25. Explain the concept of cross-browser testing and how it can be achieved in Selenium.
+26. What are the best practices for writing effective and maintainable Selenium tests?
+27. How do you handle authentication pop-ups in Selenium WebDriver?
+28. Explain the concept of Desired Capabilities in Selenium.
+29. How do you perform data-driven testing in Selenium?
+30. What are the advantages of using CSS locators in Selenium?
+31. How do you handle browser window resizing in Selenium WebDriver?
+32. What are the different types of assertions in TestNG and how do you use them in Selenium?
+33. Explain the concept of parallel execution in Selenium WebDriver.
+34. How do you handle frames nested within frames in Selenium?
+35. How do you handle dynamic tables in Selenium?
+36. How do you perform cross-browser testing using Selenium WebDriver?
+37. How do you handle browser-specific JavaScript alerts in Selenium?
+38. Explain the concept of cross-site scripting (XSS) and how it can be prevented in Selenium.
+39. Explain the concept of headless browser testing in Selenium.
+40. How do you handle AJAX-based applications in Selenium?
+41. How do you handle broken links in Selenium?
+42. What are the different types of web elements in Selenium?
+43. How do you handle JavaScript-based actions such as scrolling or hovering in Selenium?
+44. How do you perform database testing using Selenium WebDriver?
+45. How you have connected database with selenium.
+
+
+
+
+
+
+
+
+
+
+
